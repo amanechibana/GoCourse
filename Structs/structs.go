@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-
 	"example.com/structs/user"
 )
 
@@ -13,12 +12,16 @@ func main() {
 
 	var appUser *user.User
 
-	appUser, err := user.NewUser(userFirstName, userLastName, userBirth)
+	appUser, err := user.New(userFirstName, userLastName, userBirth)
 
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+
+	Admin := user.NewAdmin("test@gmail.com","thelog","pog","log","24/24/2424")
+
+	Admin.OutputValue()
 
 	appUser.OutputValue()
 	appUser.ClearUserName()
