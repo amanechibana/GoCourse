@@ -1,20 +1,32 @@
 package main
 
-import "fmt"
+import (
+	"example.com/pricecalc/filemanager"
+	"example.com/pricecalc/prices"
+	"example.com/pricecalc/cmdmanager"
+	"fmt"
+)
 
 func main() {
-	prices := []float64{10, 20, 30}
 	taxRates := []float64{0, 0.07, 0.1, 0.15}
 
-	result := make(map[float64][]float64)
-
 	for _, taxRate := range taxRates {
-		postTax := make([]float64, len(prices))
-		for priceIndex, price := range prices {
-			postTax[priceIndex] = price * (1 + taxRate)
-		}
-		result[taxRate] = postTax
-	}
+		fm := filemanager.New("prices.txt",fmt.Sprintf("result_%.0f.json",taxRate*100),)
+		cmdm := cmdmanager.New()
+		priceJob := prices.NewTaxPriceJob(cmdm,taxRate)
+		err := priceJob.Process()
 
-	fmt.Println(result)
+		if err != nil{
+			fmt.Println(err)
+			return
+		}
+
+		priceJob = prices.NewTaxPriceJob(fm,taxRate)
+		err = priceJob.Process()
+
+		if err != nil{
+			fmt.Println(err)
+			return
+		}
+	}
 }
