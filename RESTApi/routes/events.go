@@ -2,9 +2,11 @@ package routes
 
 import (
 	"net/http"
-	"example.com/restapi/models"
-	"github.com/gin-gonic/gin"
 	"strconv"
+
+	"example.com/restapi/models"
+	"example.com/restapi/utils"
+	"github.com/gin-gonic/gin"
 )
 
 func getEvents(context *gin.Context) {
@@ -35,6 +37,18 @@ func getEvent(context *gin.Context){
 }
 
 func createEvent(context *gin.Context) {
+	token := context.Request.Header.Get("Authorization")
+
+	if token == ""{
+		context.JSON(http.StatusUnauthorized, gin.H{"message":"Not authorized"})
+		return
+	}
+
+	if utils.VerifyToken(token) != nil{
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
+		return
+	}
+
 	var event models.Event
 	err := context.ShouldBindJSON(&event)
 
@@ -43,7 +57,6 @@ func createEvent(context *gin.Context) {
 		return
 	}
 
-	event.ID = 1
 	event.UserID = 1
 
 	err = event.Save()
