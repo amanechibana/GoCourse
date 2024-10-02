@@ -3,7 +3,6 @@ package middleware
 import (
 	"net/http"
 
-	"example.com/restapi/models"
 	"example.com/restapi/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -23,13 +22,6 @@ func Authenticate(context *gin.Context) {
 		return
 	}
 
-	var event models.Event
-	err = context.ShouldBindJSON(&event)
-
-	if err != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message":"Could not parse data"})
-		return
-	}
-
+	context.Set("userId",userId)
 	context.Next()
 }

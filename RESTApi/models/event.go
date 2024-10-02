@@ -1,7 +1,8 @@
-package models 
+package models
 
-import(
+import (
 	"time"
+
 	"example.com/restapi/db"
 )
 
@@ -76,7 +77,7 @@ func GetEventByID(id int64) (*Event,error){
 	return &event, nil
 }
 
-func (event Event)Update() error{
+func (event Event) Update() error{
 	query :=`
 	UPDATE events
 	SET name = ?, description = ?, location = ?, dateTime = ?
@@ -93,7 +94,7 @@ func (event Event)Update() error{
 	return err
 }
 
-func (event Event)Delete() error{
+func (event Event) Delete() error{
 	query:= "DELETE FROM events WHERE id = ?"
 	stmt, err:= db.DB.Prepare(query)
 
