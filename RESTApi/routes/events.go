@@ -44,20 +44,22 @@ func createEvent(context *gin.Context) {
 		return
 	}
 
-	if utils.VerifyToken(token) != nil{
+	userId, err := utils.VerifyToken(token) 
+
+	if err != nil{
 		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
 		return
 	}
 
 	var event models.Event
-	err := context.ShouldBindJSON(&event)
+	err = context.ShouldBindJSON(&event)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message":"Could not parse data"})
 		return
 	}
 
-	event.UserID = 1
+	event.UserID = userId
 
 	err = event.Save()
 
